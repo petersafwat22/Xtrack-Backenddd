@@ -17,22 +17,30 @@ app.set("trust proxy", 1);
 // CORS configuration
 app.use(
   cors({
-    // origin: [
-    //   "http://localhost:3000",
-    //   "https://xtrack-frontend.vercel.app", // Add your frontend domain
-    // ],
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: [
+      "http://localhost:3000",
+      "https://xtrack-frontend.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
+
+// Enable pre-flight requests for all routes
+app.options("*", cors());
 
 // Middleware to parse JSON requests
 app.use(express.json());
 
-// Security middleware
-app.use(helmet());
+// Security middleware with adjusted settings
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+  })
+);
 
 // Rate limiter configuration
 const limiter = rateLimit({
