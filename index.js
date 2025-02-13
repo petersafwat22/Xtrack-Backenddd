@@ -17,10 +17,11 @@ app.set("trust proxy", 1);
 // CORS configuration
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://xtrack-frontend.vercel.app", // Add your frontend domain
-    ],
+    // origin: [
+    //   "http://localhost:3000",
+    //   "https://xtrack-frontend.vercel.app", // Add your frontend domain
+    // ],
+    origin: "*",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
