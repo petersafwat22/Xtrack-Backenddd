@@ -15,7 +15,13 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Enable pre-flight requests for all routes
-app.options("*", cors());
+app.options("*", (req, res) => {
+  res.set("Access-Control-Allow-Origin", "https://xtrack-frontend.vercel.app");
+  res.set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.set("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(200);
+});
 // CORS configuration
 app.use(
   cors({
