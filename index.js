@@ -9,71 +9,22 @@ const AppError = require("./utils/appError");
 const errorController = require("./controllers/errorController");
 dotenv.config();
 
+// Initialize express app
 const app = express();
-
-// Trust proxy - Add this before other middleware
-app.set("trust proxy", 1);
-
-// Enable pre-flight requests for all routes
-app.options("*", (req, res) => {
-  res.set("Access-Control-Allow-Origin", "https://xtrack-frontend.vercel.app");
-  res.set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-  res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.set("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(200);
-});
-// CORS configuration
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://xtrack-frontend.vercel.app",
-      "https://xtrack-frontend-git-main-petersafwat11s-projects.vercel.app"
-    ],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    origin: ["http://localhost:3000", "https://quotiss.vercel.app"],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-    optionsSuccessStatus: 200,
   })
 );
-
 
 // Middleware to parse JSON requests
 app.use(express.json());
 
-// Security middleware with adjusted settings
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
-  })
-);
-
-// Rate limiter configuration
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  standardHeaders: true,
-  legacyHeaders: false,
-  // Add trusted proxy configuration
-  trustProxy: true,
-});
-
-app.use(limiter);
-
-// Add this before your routes
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "success",
-    message: "Xtrack API is running",
-    environment: process.env.NODE_ENV,
-    timestamp: new Date().toISOString(),
-  });
-});
 
 app.use("/api/users", userRoutes);
 app.use("/api/charges", chargesRoutes);
-
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
@@ -88,9 +39,6 @@ app.use((err, req, res, next) => {
     message,
   });
 });
-
-// Error handling middleware
-app.use(errorController);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
