@@ -20,6 +20,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://xtrack-frontend.vercel.app",
+      "https://xtrack-frontend-git-main-petersafwat11s-projects.vercel.app"
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
