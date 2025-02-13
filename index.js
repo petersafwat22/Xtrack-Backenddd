@@ -14,6 +14,8 @@ const app = express();
 // Trust proxy - Add this before other middleware
 app.set("trust proxy", 1);
 
+// Enable pre-flight requests for all routes
+app.options("*", cors());
 // CORS configuration
 app.use(
   cors({
@@ -29,8 +31,6 @@ app.use(
   })
 );
 
-// Enable pre-flight requests for all routes
-app.options("*", cors());
 
 // Middleware to parse JSON requests
 app.use(express.json());
